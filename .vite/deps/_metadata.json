@@ -1,0 +1,47 @@
+{
+  "hash": "e4f75edc",
+  "browserHash": "c93e6bfa",
+  "optimized": {
+    "react/jsx-dev-runtime": {
+      "src": "../../node_modules/react/jsx-dev-runtime.js",
+      "file": "react_jsx-dev-runtime.js",
+      "fileHash": "fdecbf41",
+      "needsInterop": true
+    },
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "194feccf",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "c02234ae",
+      "needsInterop": true
+    },
+    "react-admin": {
+      "src": "../../node_modules/react-admin/dist/esm/index.js",
+      "file": "react-admin.js",
+      "fileHash": "d2d16153",
+      "needsInterop": false
+    },
+    "ra-data-fakerest": {
+      "src": "../../node_modules/ra-data-fakerest/dist/esm/index.js",
+      "file": "ra-data-fakerest.js",
+      "fileHash": "49841a4b",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-OTY6O57J": {
+      "file": "chunk-OTY6O57J.js"
+    },
+    "chunk-2PA4WPI3": {
+      "file": "chunk-2PA4WPI3.js"
+    },
+    "chunk-ROME4SDB": {
+      "file": "chunk-ROME4SDB.js"
+    }
+  }
+}
