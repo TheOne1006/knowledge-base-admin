@@ -2507,6 +2507,21 @@ ra-data-fakerest@^4.16.0:
   dependencies:
     fakerest "^3.0.0"
 
+ra-data-json-server@^4.16.7:
+  version "4.16.7"
+  resolved "https://registry.yarnpkg.com/ra-data-json-server/-/ra-data-json-server-4.16.7.tgz#bde5a91decc183d701e615f701a19852f5425761"
+  integrity sha512-wLhlHFLIa2H6wKB7Br6ygNk4DW7ZPZ/b7mkqXYSs8g2cPc+oDB7VyLUzGlK77GGdB9NDyp1aLA5nw9/4h703BQ==
+  dependencies:
+    query-string "^7.1.1"
+    ra-core "^4.16.7"
+
+ra-data-simple-rest@^4.16.7:
+  version "4.16.7"
+  resolved "https://registry.yarnpkg.com/ra-data-simple-rest/-/ra-data-simple-rest-4.16.7.tgz#230eb9dc209d1d61795d351aab199e11295452d4"
+  integrity sha512-3Btp7PiIZCgie3KgzPpyAOaHS4ubO/VyA1EiLSiWYU+dzN2NJ3/k8N2r9nHyOh5SpGuTVUiLFYeC+1Q6+OmXQg==
+  dependencies:
+    query-string "^7.1.1"
+
 ra-i18n-polyglot@^4.16.7:
   version "4.16.7"
   resolved "https://registry.yarnpkg.com/ra-i18n-polyglot/-/ra-i18n-polyglot-4.16.7.tgz#fa3ad2c48bd07a2172de6d07f886ecbd164d4bd3"

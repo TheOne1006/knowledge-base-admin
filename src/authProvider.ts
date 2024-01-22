@@ -1,44 +1,47 @@
-import { AuthProvider, HttpError } from 'react-admin';
-import data from './users.json';
+// in src/authProvider.ts
+import { AuthProvider } from "react-admin";
+import { httpClient } from './dataProvider';
 
-/**
- * This authProvider is only for test purposes. Don't use it in production.
- */
 export const authProvider: AuthProvider = {
-    login: ({ username, password }) => {
-        const user = data.users.find(
-            u => u.username === username && u.password === password
-        );
-
-        if (user) {
-            // eslint-disable-next-line no-unused-vars
-            let { password, ...userToPersist } = user;
-            localStorage.setItem('user', JSON.stringify(userToPersist));
-            return Promise.resolve();
-        }
-
-        return Promise.reject(
-            new HttpError('Unauthorized', 401, {
-                message: 'Invalid username or password',
-            })
-        );
+    // called when the user attempts to log in
+    login: async ({ username, password }) => {
+        const loginUrl = `${import.meta.env.VITE_SERVER_HOST}/${import.meta.env.VITE_SERVER_USER_LOGIN_ENDPOINT}`;
+        // post to  loginUrl with payload
+        const { json } = await httpClient(loginUrl, {
+            method: 'POST',
+            body: JSON.stringify({ username, password }),
+        });
+        localStorage.setItem(`${import.meta.env.VITE_APP_COOKIE_PREFIX}token`, json.token);
+        localStorage.setItem(`${import.meta.env.VITE_APP_COOKIE_PREFIX}roles`, json.roles.join(','));
+        return Promise.resolve(json.token);
     },
+    // called when the user clicks on the logout button
     logout: () => {
-        localStorage.removeItem('user');
+        localStorage.removeItem(`${import.meta.env.VITE_APP_COOKIE_PREFIX}token`);
         return Promise.resolve();
     },
-    checkError: () => Promise.resolve(),
-    checkAuth: () =>
-        localStorage.getItem('user') ? Promise.resolve() : Promise.reject(),
-    getPermissions: () => {
-        return Promise.resolve(undefined);
+    // called when the API returns an error
+    checkError: ({ status }: { status: number }) => {
+        if (status === 401 || status === 403) {
+            // localStorage.removeItem(`${import.meta.env.VITE_APP_COOKIE_PREFIX}token`);
+            // localStorage.removeItem(`${import.meta.env.VITE_APP_COOKIE_PREFIX}roles`);
+            return Promise.reject();
+        }
+        return Promise.resolve();
     },
-    getIdentity: () => {
-        const persistedUser = localStorage.getItem('user');
-        const user = persistedUser ? JSON.parse(persistedUser) : null;
+    // called when the user navigates to a new location, to check for authentication
+    checkAuth: async () => {
+        const checkUrl = `${import.meta.env.VITE_SERVER_HOST}/${import.meta.env.VITE_SERVER_USER_CHECK_ENDPOINT}`;
 
-        return Promise.resolve(user);
+        const { json } = await httpClient(checkUrl, {
+            method: 'GET',
+        });
+        localStorage.setItem(`${import.meta.env.VITE_APP_COOKIE_PREFIX}roles`, json.roles.join(','));
+
+        return json.id
+            ? Promise.resolve()
+            : Promise.reject();
     },
+    // called when the user navigates to a new location, to check for permissions / roles
+    getPermissions: () => Promise.resolve(),
 };
-
-export default authProvider;
