@@ -5,16 +5,16 @@ import {
 } from 'react-admin';
 
 import { useQuery } from 'react-query';
-import { dataProvider } from '../../dataProvider';
+import { dataProvider } from '../dataProvider';
 
-import DirTree from '../../components/DirTree';
+import DirTree from './DirTree';
 
 
-export const FullFiles = () => {
+export const DiskFiles = ({ subDir }: { subDir?: string }) => {
     const record = useRecordContext();
 
     // fix: like useGetMany
-    const { isLoading, data, error } = useQuery(['getDiskFiles', record.id], () => dataProvider.getDiskFiles(record.id, ''));
+    const { isLoading, data, error } = useQuery(['getDiskFiles', record.id], () => dataProvider.getDiskFiles(record.id, subDir));
 
     if (isLoading) { return <Loading />; }
     if (error) { return <p>ERROR</p>; }
@@ -23,4 +23,4 @@ export const FullFiles = () => {
     return (<DirTree roots={data} title='files' />);
 }
 
-export default FullFiles;
+export default DiskFiles;

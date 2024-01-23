@@ -32,7 +32,7 @@ export const baseDataProvider = jsonServerProvider(import.meta.env.VITE_SERVER_H
 
 export const dataProvider = {
     ...baseDataProvider,
-    getDiskFiles: async (bkId: Identifier, subDir: string) => {
+    getDiskFiles: async (bkId: Identifier, subDir?: string) => {
 
         let endUrlPoint = `${import.meta.env.VITE_SERVER_HOST}/kbs/${bkId}/diskFiles`;
         if (!endUrlPoint.startsWith('http')) {
@@ -42,7 +42,7 @@ export const dataProvider = {
         }
 
         const queryParams = {
-            subDir,
+            subDir: subDir || '',
             isRecursion: 'true'
         };
 

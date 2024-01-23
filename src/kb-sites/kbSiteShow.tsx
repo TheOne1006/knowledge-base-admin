@@ -1,7 +1,7 @@
 
 import {
     DateField,
-    // ReferenceField,
+    ReferenceField,
     ShowView,
     // SimpleShowLayout,
     TextField,
@@ -42,7 +42,10 @@ const PreviewBtn = () => {
 }
 
 
-
+/**
+ * tagsField
+ * @returns 
+ */
 const TagsField = () => {
     const record = useRecordContext();
 
@@ -55,24 +58,49 @@ const TagsField = () => {
 }
 
 
-const KbShow = () => {
+
+const DiskFileTab = () => {
+    const record = useRecordContext();
+
+    return (
+        <DiskFiles subDir={ record.title } />
+    )
+}
+
+
+const KbSiteShow = () => {
     const controllerProps = useShowController();
 
     return (
         <ShowContextProvider value={controllerProps}>
             <ShowView>
                 <TabbedShowLayout>
-                    <TabbedShowLayout.Tab label="kb.summary">
+                    <TabbedShowLayout.Tab label="kb-site.summary">
                         <TextField source="id" />
                         <TextField source="title" />
                         <TextField source="desc" />
+                        <TextField source="pattern" />
+                        <UrlField source="hostname" />
+                        <ArrayField source="startUrls">
+                            <SingleFieldList>
+                                <TagsField />
+                            </SingleFieldList>
+                        </ArrayField> 
+                        <ArrayField source="removeSelectors">
+                            <SingleFieldList linkType={false}>
+                                <TagsField />
+                            </SingleFieldList>
+                        </ArrayField>
+                        <ReferenceField source="kbId" reference="kbs" >
+                            <TextField source="title" />
+                        </ReferenceField>
                         <DateField source="createdAt" cellClassName="createdAt" showTime />
                     </TabbedShowLayout.Tab>
 
-                    <TabbedShowLayout.Tab label="kb.releation.files">
+                    <TabbedShowLayout.Tab label="kb-site.releation.files">
                         <ReferenceManyField
                             reference="kb-files"
-                            target="kbId"
+                            target="siteId"
                             sort={{ field: 'id', order: 'DESC' }}
                         >
                             <Datagrid>
@@ -80,7 +108,6 @@ const KbShow = () => {
                                 <TextField source="fileExt" />
                                 <TextField source="sourceType" />
                                 <TextField source="sourceUrl" />
-                                {/* <TextField source="summary" /> */}
                                 <PreviewBtn />
                             </Datagrid>
                         </ReferenceManyField>
@@ -88,30 +115,10 @@ const KbShow = () => {
 
 
                     <TabbedShowLayout.Tab label="kb.releation.file-preview">
-                        <DiskFiles />
+                        <DiskFileTab />
                     </TabbedShowLayout.Tab>
 
-                    <TabbedShowLayout.Tab label="kb.releation.sites">
-                        <ReferenceManyField
-                            reference="kb-sites"
-                            target="kbId"
-                            sort={{ field: 'id', order: 'DESC' }}
-                        >
-                            <Datagrid rowClick='edit'>
-                                <TextField source="title" />
-                                <TextField source="desc" />
-                                <UrlField source="hostname" />
-                                <ArrayField source="startUrls">
-                                    <SingleFieldList linkType={false}>
-                                        <TagsField />
-                                    </SingleFieldList>
-                                </ArrayField>
-                                {/* <TextField source="pattern" />
-                                <TextField source="removeSelectors" /> */}
-                            </Datagrid>
-                        </ReferenceManyField>
-                    </TabbedShowLayout.Tab>
-                    
+
                 </TabbedShowLayout>
 
             </ShowView>
@@ -119,4 +126,4 @@ const KbShow = () => {
     )
 };
 
-export default KbShow;
+export default KbSiteShow;

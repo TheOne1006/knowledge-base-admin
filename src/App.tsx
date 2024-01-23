@@ -5,6 +5,7 @@ import { authProvider } from './authProvider';
 import { LoginPage } from './pages/LoginPage';
 import { CustomLayout } from './pages/Layout';;
 import kbs from './kbs';
+import kbSites from './kb-sites';
 
 
 export const App = () => (
@@ -18,8 +19,7 @@ export const App = () => (
         <Resource name="users" list={ListGuesser} edit={EditGuesser} show={ShowGuesser} />
         <Resource name="kbs" {...kbs} />
 
-		<Resource name="kb-sites" list={ListGuesser} edit={EditGuesser} show={ShowGuesser} />
-		<Resource name="kb-files" list={ListGuesser} edit={EditGuesser} show={ShowGuesser} />
+        <Resource name="kb-sites" {...kbSites} />
 
         <Resource name="push-configs" list={ListGuesser} edit={EditGuesser} show={ShowGuesser} />
 

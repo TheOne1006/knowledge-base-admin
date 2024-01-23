@@ -10,12 +10,15 @@ import {
     FilterButton,
     CreateButton,
     TextInput,
+    UrlField,
+    // ArrayInput,
 } from "react-admin";
 
 
 const listFilter = [
     <TextInput key="title" source="title" defaultValue="" />,
     <TextInput key="desc" source="desc" defaultValue="" />,
+    <TextInput key="hostname" source="hostname" defaultValue="" />,
 ];
 
 const ListActions = () => (
@@ -26,17 +29,19 @@ const ListActions = () => (
     </TopToolbar>
 );
 
-const KbList = (props: any) => (
+const KbSiteList = (props: any) => (
     <List {...props} filters={listFilter} actions={<ListActions />}>
         <DatagridConfigurable rowClick="show">
             <TextField source="id" />
             <TextField source="title" cellClassName="title" />
             <TextField source="desc" cellClassName="desc" />
-            <DateField source="createdAt" cellClassName="createdAt"  showTime />
+            <UrlField source="hostname" cellClassName="hostname" />
+            <TextField source="pattern" cellClassName="pattern" />
+            <DateField source="createdAt" cellClassName="createdAt" showTime />
             <DateField source="updatedAt" cellClassName="updatedAt" showTime />
             <EditButton />
             <DeleteButton />
         </DatagridConfigurable>
     </List>
 );
-export default KbList;
+export default KbSiteList;
