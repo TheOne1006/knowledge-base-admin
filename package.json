@@ -13,6 +13,7 @@
     "ra-data-fakerest": "^4.16.0",
     "ra-data-json-server": "^4.16.7",
     "ra-data-simple-rest": "^4.16.7",
+    "ra-tree-core": "^2.9.8",
     "react": "^18.2.0",
     "react-admin": "^4.16.0",
     "react-dom": "^18.2.0"

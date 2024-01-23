@@ -27,17 +27,17 @@ const ListActions = () => (
 );
 
 // 行点击事件
-const rowClick = (_id: any, _resource: any, record: any) => {
-    if (record?.commentable) {
-        return 'edit';
-    }
+// const rowClick = (_id: any, _resource: any, record: any) => {
+//     if (record?.commentable) {
+//         return 'edit';
+//     }
 
-    return 'show';
-};
+//     return 'show';
+// };
 
 const KbList = (props: any) => (
     <List {...props} filters={listFilter} actions={<ListActions />}>
-        <DatagridConfigurable rowClick={rowClick}>
+        <DatagridConfigurable rowClick="show">
             <TextField source="id" />
             <TextField source="title" cellClassName="title" />
             <TextField source="desc" cellClassName="desc" />

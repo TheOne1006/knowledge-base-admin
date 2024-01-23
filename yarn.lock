@@ -2426,6 +2426,11 @@ path-type@^4.0.0:
   resolved "https://registry.yarnpkg.com/path-type/-/path-type-4.0.0.tgz#84ed01c0a7ba380afe09d90a8c180dcd9d03043b"
   integrity sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==
 
+performant-array-to-tree@^1.2.0:
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/performant-array-to-tree/-/performant-array-to-tree-1.11.0.tgz#cbb6c4a1a41a89b3a209dca7a8715cbe7d5a6a33"
+  integrity sha512-YwCqIDvnaebXaKuKQhI5yJD6ryDc3FxvoeX/5ougXTKDUWb7s5S2BuBgIyftCa4sBe1+ZU5Kmi4RJy+pjjjrpw==
+
 picocolors@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/picocolors/-/picocolors-1.0.0.tgz#cb5bdc74ff3f51892236eaf79d68bc44564ab81c"
@@ -2536,6 +2541,14 @@ ra-language-english@^4.16.7:
   integrity sha512-UQ/UIkm0ljXyV/GJ/9sP0ndc7t2+zqC0nSpn7API3K9V8ilw1DdUohktfKaM0x7gZp0jUJ878Mh0e7g6x3CGKA==
   dependencies:
     ra-core "^4.16.7"
+
+ra-tree-core@^2.9.8:
+  version "2.9.8"
+  resolved "https://registry.yarnpkg.com/ra-tree-core/-/ra-tree-core-2.9.8.tgz#87c778c256fa37196ba7b574e270a677f68353fd"
+  integrity sha512-Y93Psjj8PfW3CZ6pSE1RR5HzuZviGdNSg1QEHmeYQFEFZk7cvC+s8h0cO9nuArtjKyAz2nR7YLUETJhOKUDI7g==
+  dependencies:
+    performant-array-to-tree "^1.2.0"
+    prop-types "^15.6.1"
 
 ra-ui-materialui@^4.16.7:
   version "4.16.7"

@@ -3,10 +3,16 @@ import {
     SimpleForm,
     TextInput,
     DateTimeInput,
+    useRecordContext,
 } from "react-admin";
 
+const KbTitle = () => {
+    const record = useRecordContext();
+    return <span>Knowledge Base : {record?.title}</span>;
+};
+
 const KbEdit = (props: any) => (
-    <Edit undoable={false} title={"Kb"} {...props}>
+    <Edit undoable={false} title={<KbTitle />} {...props}>
         <SimpleForm>
             <TextInput source="title" />
             <TextInput source="desc" />
