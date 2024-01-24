@@ -11,7 +11,7 @@ import {
     CreateButton,
     TextInput,
     UrlField,
-    WrapperField,
+    ReferenceField,
     // ArrayInput,
 } from "react-admin";
 
@@ -19,7 +19,8 @@ import {
 const listFilter = [
     <TextInput key="title" source="title" defaultValue="" />,
     <TextInput key="desc" source="desc" defaultValue="" />,
-    <TextInput key="hostname" source="hostname" defaultValue="" />,
+    <TextInput key="apiUrl" source="apiUrl" defaultValue="" />,
+    <TextInput key="type" source="type" defaultValue="" />,
 ];
 
 const ListActions = () => (
@@ -30,23 +31,23 @@ const ListActions = () => (
     </TopToolbar>
 );
 
-const KbSiteList = (props: any) => (
+const PushConfigList = (props: any) => (
     <List {...props} filters={listFilter} actions={<ListActions />}>
         <DatagridConfigurable rowClick="show">
             <TextField source="id" />
             <TextField source="title" cellClassName="title" />
             <TextField source="desc" cellClassName="desc" />
-            <UrlField source="hostname" cellClassName="hostname" />
-            <TextField source="pattern" cellClassName="pattern" />
+            <UrlField source="apiUrl" cellClassName="apiUrl" />
+            <TextField source="apiKey" cellClassName="apiKey" />
+            <TextField source="type" cellClassName="type" />
+            <ReferenceField source="kbId" reference="kbs">
+                <TextField source="title" />
+            </ReferenceField>
             <DateField source="createdAt" cellClassName="createdAt" showTime />
             <DateField source="updatedAt" cellClassName="updatedAt" showTime />
-            <WrapperField label="Edit">
-                <EditButton />
-            </WrapperField>
-            <WrapperField label="Delete">
-                <DeleteButton />
-            </WrapperField>
+            <EditButton />
+            <DeleteButton />
         </DatagridConfigurable>
     </List>
 );
-export default KbSiteList;
+export default PushConfigList;

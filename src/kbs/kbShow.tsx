@@ -16,30 +16,10 @@ import {
     ChipField,
     useRecordContext,
 } from 'react-admin';
-import {
-    Button,
-} from '@mui/material';
-
-import { genPreviewLink } from '../utils/genPreviewLink';
-
 
 import DiskFiles from '../components/DiskFiles';
 
-
-const PreviewBtn = () => {
-    const record = useRecordContext();
-    const endPoint = genPreviewLink(record.kbId, record.filePath);
-
-    function btnClick() {
-        window.open(endPoint, record.filePath);
-    }
-
-    return (
-        <Button onClick={btnClick}>
-            preview
-        </Button>
-    )
-}
+import PreviewBtn from '../components/PreviewBtn';
 
 
 

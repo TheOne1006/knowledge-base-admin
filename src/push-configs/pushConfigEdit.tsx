@@ -9,19 +9,20 @@ import {
     ReferenceField,
     TextField,
     DateTimeInput,
+    ReferenceInput,
 } from "react-admin";
 
-const KbSiteTitle = () => {
+const PushConfigTitle = () => {
     const record = useRecordContext();
     return <span>Knowledge Base : {record?.title}</span>;
 };
 
-const KbSiteEdit = (props: any) => (
-    <Edit undoable={false} title={<KbSiteTitle />} {...props}>
+const PushConfigEdit = (props: any) => (
+    <Edit undoable={false} title={<PushConfigTitle />} {...props}>
         <SimpleForm>
-            <ReferenceField source="kbId" reference="kbs" link="edit" label="kbId" >
-                <TextField source="title" label="kb.title" />
-            </ReferenceField>
+            <ReferenceInput disabled source="kbId" reference="kbs" link="edit" label="kbId" >
+                <TextInput disabled source="title" label="kb.title" />
+            </ReferenceInput>
             <TextInput source="title" />
             <TextInput source="desc" />
             <TextInput source="hostname" fullWidth />
@@ -42,4 +43,4 @@ const KbSiteEdit = (props: any) => (
     </Edit>
 );
 
-export default KbSiteEdit;
+export default PushConfigEdit;

@@ -41,10 +41,9 @@ Comments have the following properties: `id`, `post_id` and `content`.
 
 
 
-## log
+## todo
 
+- i18n
+- choices
+- 
 
-http://localhost:3000/v1/kbs/1/privewFile?filePath=%2Ftitle%2Fcli%2Flibraries.html&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ0aGVvbmUiLCJlbWFpbCI6IjI5QHFxLmNvbSIsInJvbGVzIjpbImF1dGhlbnRpY2F0ZWQiLCJ1c2VyIiwic3VwZXItYWRtaW4iXSwic2FsdCI6ImZmN2EzNmNkIiwicGFzc3dvcmQiOiJlN2U5ZjAzZGNlZTU3OTRkMmUyMGE2ZjhmYjNiNGRkMyIsImNyZWF0ZWRBdCI6IjIwMjQtMDEtMjJUMDc6MTE6MDIuMTY5WiIsInVwZGF0ZWRBdCI6IjIwMjQtMDEtMjJUMDc6MTE6MDIuMTY5WiIsInZlcnNpb24iOjAsImlzRGVsZXRlZCI6ZmFsc2UsImlhdCI6MTcwNjAwMDkxMSwiZXhwIjoxNzA2ODY0OTExfQ.Vsd7YnDK17UbuwhYoPr6x766bh3boF38PG6rR1dD2Jk
-
-
-http://localhost:3000/v1/kbs/1/privewFile?filePath=%2Ftitle%2Fcli%2Flibraries.html&token=_mock1,super-admin
