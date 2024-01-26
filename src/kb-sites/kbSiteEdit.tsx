@@ -3,7 +3,7 @@ import {
     SimpleForm,
     TextInput,
     useRecordContext,
-    DateField,
+    // DateField,
     ArrayInput,
     SimpleFormIterator,
     ReferenceField,
@@ -17,7 +17,7 @@ const KbSiteTitle = () => {
 };
 
 const KbSiteEdit = (props: any) => (
-    <Edit undoable={false} title={<KbSiteTitle />} {...props}>
+    <Edit title={<KbSiteTitle />} {...props} undoable={false}>
         <SimpleForm>
             <ReferenceField source="kbId" reference="kbs" link="edit" label="kbId" >
                 <TextField source="title" label="kb.title" />
@@ -25,15 +25,24 @@ const KbSiteEdit = (props: any) => (
             <TextInput source="title" />
             <TextInput source="desc" />
             <TextInput source="hostname" fullWidth />
-            <TextInput source="pattern" fullWidth />
-            <ArrayInput source="startUrls" >
-                <SimpleFormIterator inline fullWidth>
-                    <TextInput source={''} />
+            <ArrayInput source="startUrls" variant="outlined" >
+                <SimpleFormIterator fullWidth>
+                    <TextInput source="" fullWidth variant="outlined" />
                 </SimpleFormIterator>
             </ArrayInput>
-            <ArrayInput source="removeSelectors">
-                <SimpleFormIterator inline fullWidth>
-                    <TextInput source={''} />
+            <ArrayInput source="matchPatterns">
+                <SimpleFormIterator fullWidth>
+                    <TextInput source="" fullWidth />
+                </SimpleFormIterator>
+            </ArrayInput>
+            <ArrayInput source="ignorePatterns">
+                <SimpleFormIterator fullWidth>
+                    <TextInput source="" fullWidth />
+                </SimpleFormIterator>
+            </ArrayInput>
+            <ArrayInput source="removeSelectors" variant="outlined" >
+                <SimpleFormIterator fullWidth>
+                    <TextInput source="" variant="outlined" />
                 </SimpleFormIterator>
             </ArrayInput>
             <DateTimeInput disabled source="createdAt" />

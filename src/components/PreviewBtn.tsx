@@ -3,10 +3,11 @@ import {useRecordContext,
 import {
     Button,
 } from '@mui/material';
+import PreviewIcon from '@mui/icons-material/Preview';
 
 import { genPreviewLink } from '../utils/genPreviewLink';
 
-const PreviewBtn = () => {
+export const PreviewBtn = ({ label }: {label: string}) => {
     const record = useRecordContext();
     const endPoint = genPreviewLink(record.kbId, record.filePath);
 
@@ -18,10 +19,12 @@ const PreviewBtn = () => {
     }
 
     return (
-        <Button onClick={btnClick}>
-            preview
+        <Button onClick={btnClick} startIcon={<PreviewIcon />}>
+            {label}
         </Button>
     )
 }
 
-export default PreviewBtn;
+PreviewBtn.defaultProps = {
+    label: 'preview'
+}

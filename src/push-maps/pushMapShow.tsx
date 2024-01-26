@@ -1,7 +1,6 @@
-
 import {
     DateField,
-    ReferenceField,
+    ReferenceOneField,
     ShowView,
     // SimpleShowLayout,
     TextField,
@@ -9,7 +8,7 @@ import {
     TabbedShowLayout,
     useShowController,
 } from 'react-admin';
-
+import { PushTypeField } from '../components/fields';
 
 
 const PushMapShow = () => {
@@ -21,15 +20,18 @@ const PushMapShow = () => {
                 <TabbedShowLayout>
                     <TabbedShowLayout.Tab label="push-map.summary">
                         <TextField source="id" />
-                        <TextField source="configId" />
-                        <TextField source="fileId" />
-                        <TextField source="type" />
+                        <ReferenceOneField target="id" source="configId" reference="push-configs" link="show" >
+                            <TextField source="title" />
+                        </ReferenceOneField>
+                        <ReferenceOneField target="id" source="fileId" reference="kb-files" >
+                            <TextField source="filePath" />
+                        </ReferenceOneField>
+                        <PushTypeField source="type" cellClassName="type" />
                         <TextField source="pushVersion" />
                         <TextField source="remoteId" />
-                        <ReferenceField source="kbId" reference="kbs" link="show" >
+                        <ReferenceOneField target="id" source="kbId" reference="kbs" link="show" >
                             <TextField source="title" />
-                            <TextField source="desc" />
-                        </ReferenceField>
+                        </ReferenceOneField>
                         <DateField source="createdAt" cellClassName="createdAt" showTime />
                     </TabbedShowLayout.Tab>
 

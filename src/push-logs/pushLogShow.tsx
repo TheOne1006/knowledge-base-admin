@@ -11,9 +11,11 @@ import {
     ReferenceManyField,
     DatagridConfigurable,
     WrapperField,
+    ReferenceOneField,
 } from 'react-admin';
 
-import PreviewBtn from '../components/PreviewBtn';
+import { PreviewBtn } from '../components/PreviewBtn';
+import { PushTypeField } from '../components/fields';
 
 
 const PushLogShow = () => {
@@ -25,7 +27,7 @@ const PushLogShow = () => {
                 <TabbedShowLayout>
                     <TabbedShowLayout.Tab label="push-logs.summary">
                         <TextField source="id" />
-                        <TextField source="type" />
+                        <PushTypeField source="type" />
                         <TextField source="pushVersion" />
                         <ReferenceField source="kbId" reference="kbs" link="show" >
                             <TextField source="title" />
@@ -56,18 +58,21 @@ const PushLogShow = () => {
                                     <TextField source="title" />
                                 </ReferenceField>
                                 {/* <TextField source="fileId" /> */}
-                                <TextField source="type" />
+                                <PushTypeField source="type" />
+
                                 <TextField source="pushVersion" />
                                 <TextField source="remoteId" />
 
-                                <ReferenceField source="fileId" reference="kb-files" link="show" >
+                                <ReferenceOneField 
+                                    target="id"
+                                    source="fileId" reference="kb-files" link="show" >
                                     <TextField source="filePath" />
-                                </ReferenceField>
-                                
+                                </ReferenceOneField>
+
                                 <WrapperField label="preview">
-                                    <ReferenceField source="fileId" reference="kb-files"  >
+                                    <ReferenceOneField target="id" source="fileId" reference="kb-files" link="show" >
                                         <PreviewBtn />
-                                    </ReferenceField>
+                                    </ReferenceOneField>
                                 </WrapperField>
                                 
                             </DatagridConfigurable>

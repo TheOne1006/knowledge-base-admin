@@ -10,6 +10,8 @@
     "format": "prettier --write ./src"
   },
   "dependencies": {
+    "@microsoft/fetch-event-source": "^2.0.1",
+    "@mui/lab": "^5.0.0-alpha.162",
     "lodash": "^4.17.21",
     "ra-data-fakerest": "^4.16.0",
     "ra-data-json-server": "^4.16.7",
@@ -17,7 +19,8 @@
     "ra-tree-core": "^2.9.8",
     "react": "^18.2.0",
     "react-admin": "^4.16.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.202",

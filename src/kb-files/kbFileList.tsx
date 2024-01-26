@@ -12,15 +12,16 @@ import {
     ReferenceField,
     ReferenceInput,
     SelectInput,
+    WrapperField,
+    useRecordContext,
     // ArrayInput,
-    FilterLiveSearch,
-    FilterList,
-    FilterListItem,
 } from "react-admin";
 
-import { Card, CardContent } from '@mui/material';
-import MailIcon from '@mui/icons-material/MailOutline';
-import CategoryIcon from '@mui/icons-material/LocalOffer';
+import {
+    ButtonGroup,
+} from '@mui/material';
+import { PreviewBtn } from '../components/PreviewBtn';
+import { SyncPageBtn } from '../components/SyncPageBtn';
 
 const listFilter = [
     <TextInput key="filePath" source="filePath" defaultValue="" />,
@@ -40,24 +41,21 @@ const ListActions = () => (
     </TopToolbar>
 );
 
-const KBFileFilterSidebar = () => (
-    <Card sx={{ order: -1, mr: 2, mt: 9, width: 200 }}>
-        <CardContent>
-            <FilterLiveSearch />
-            <FilterList label="Subscribed to newsletter" icon={<MailIcon />}>
-                <FilterListItem label="Yes" value={{ has_newsletter: true }} />
-                <FilterListItem label="No" value={{ has_newsletter: false }} />
-            </FilterList>
-            <FilterList label="sourceType" icon={<CategoryIcon />}>
-                <FilterListItem label="CRAWLER" value={{ sourceType: 'CRAWLER' }} />
-                <FilterListItem label="UPLOADED" value={{ sourceType: 'UPLOADED' }} />
-            </FilterList>
-        </CardContent>
-    </Card>
-);
+const OpButtons = () => {
+    const record = useRecordContext();
+
+    return (
+        <ButtonGroup disableElevation size="small" variant="outlined" aria-label="outlined button group">
+            <ShowButton label='show' />
+            <DeleteButton label='Del' />
+            <PreviewBtn label='Preview' />
+            {record?.sourceUrl && <SyncPageBtn />}
+        </ButtonGroup>
+    )
+}
 
 const KbFileList = (props: any) => (
-    <List {...props} filters={listFilter} actions={<ListActions />} aside={<KBFileFilterSidebar />}>
+    <List {...props} filters={listFilter} actions={<ListActions />}>
         <DatagridConfigurable rowClick="show">
             <TextField source="id" />
             <TextField source="filePath" cellClassName="filePath" />
@@ -71,8 +69,10 @@ const KbFileList = (props: any) => (
                 <TextField source="title" />
             </ReferenceField>
             <DateField source="createdAt" cellClassName="createdAt" showTime />
-            <ShowButton label='show' />
-            <DeleteButton />
+            <WrapperField label="op">
+                <OpButtons />
+            </WrapperField>
+     
         </DatagridConfigurable>
     </List>
 );

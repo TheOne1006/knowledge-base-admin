@@ -3,11 +3,8 @@ import {
     SimpleForm,
     TextInput,
     useRecordContext,
-    DateField,
     ArrayInput,
     SimpleFormIterator,
-    ReferenceField,
-    TextField,
     DateTimeInput,
     ReferenceInput,
 } from "react-admin";
@@ -26,7 +23,6 @@ const PushConfigEdit = (props: any) => (
             <TextInput source="title" />
             <TextInput source="desc" />
             <TextInput source="hostname" fullWidth />
-            <TextInput source="pattern" fullWidth />
             <ArrayInput source="startUrls" >
                 <SimpleFormIterator inline fullWidth>
                     <TextInput source={''} />

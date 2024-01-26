@@ -1,6 +1,6 @@
 // in src/authProvider.ts
 import { AuthProvider } from "react-admin";
-import { httpClient } from './dataProvider';
+import { httpClient } from './dataProvider/dataProvider';
 
 export const authProvider: AuthProvider = {
     // called when the user attempts to log in

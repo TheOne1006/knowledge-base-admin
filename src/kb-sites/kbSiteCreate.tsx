@@ -15,24 +15,35 @@ const KbSiteCreate = (props: any) => {
         <Create {...props} undoable={false}>
             <SimpleForm>
                 <ReferenceInput source="kbId" reference="kbs" >
-                    <SelectInput optionText="title" optionValue="id" validate={required()} />
+                    <SelectInput optionText="title" 
+                     fullWidth optionValue="id" validate={required()} />
                 </ReferenceInput>
                 <TextInput
                     autoFocus
                     source="title"
-                    validate={required('Required field')}
+                    fullWidth
+                    validate={required()}
                 />
                 <TextInput source="desc" multiline fullWidth />
                 <TextInput source="hostname" fullWidth />
-                <ArrayInput source="startUrls" >
-                    <SimpleFormIterator inline fullWidth>
-                        <TextInput source={''} />
+                <ArrayInput source="startUrls" variant="outlined" >
+                    <SimpleFormIterator fullWidth>
+                        <TextInput source="" fullWidth variant="outlined" />
                     </SimpleFormIterator>
                 </ArrayInput>
-                <TextInput source="pattern" fullWidth />
-                <ArrayInput source="removeSelectors">
-                    <SimpleFormIterator inline fullWidth>
-                        <TextInput source={''} />
+                <ArrayInput source="matchPatterns">
+                    <SimpleFormIterator fullWidth>
+                        <TextInput source="" fullWidth />
+                    </SimpleFormIterator>
+                </ArrayInput>
+                <ArrayInput source="ignorePatterns">
+                    <SimpleFormIterator  fullWidth>
+                        <TextInput source="" fullWidth />
+                    </SimpleFormIterator>
+                </ArrayInput>
+                <ArrayInput source="removeSelectors" variant="outlined" >
+                    <SimpleFormIterator  fullWidth>
+                        <TextInput source="" variant="outlined" />
                     </SimpleFormIterator>
                 </ArrayInput>
             </SimpleForm>

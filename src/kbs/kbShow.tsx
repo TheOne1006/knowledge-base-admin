@@ -1,4 +1,3 @@
-
 import {
     DateField,
     // ReferenceField,
@@ -16,11 +15,13 @@ import {
     ChipField,
     useRecordContext,
 } from 'react-admin';
-
+import {
+    Collapse,
+} from '@mui/material';
 import DiskFiles from '../components/DiskFiles';
 
-import PreviewBtn from '../components/PreviewBtn';
-
+import { PreviewBtn } from '../components/PreviewBtn';
+import { UploadArea } from '../components/UploadArea/UploadArea';
 
 
 const TagsField = () => {
@@ -50,12 +51,17 @@ const KbShow = () => {
                     </TabbedShowLayout.Tab>
 
                     <TabbedShowLayout.Tab label="kb.releation.files">
+
+                        <Collapse in>
+                            <UploadArea />
+                        </Collapse>
                         <ReferenceManyField
                             reference="kb-files"
                             target="kbId"
                             sort={{ field: 'id', order: 'DESC' }}
                         >
                             <Datagrid>
+                                <TextField source="id" />
                                 <TextField source="filePath" />
                                 <TextField source="fileExt" />
                                 <TextField source="sourceType" />
@@ -68,7 +74,7 @@ const KbShow = () => {
 
 
                     <TabbedShowLayout.Tab label="kb.releation.file-preview">
-                        <DiskFiles />
+                        <DiskFiles kbId={controllerProps?.record?.id} />
                     </TabbedShowLayout.Tab>
 
                     <TabbedShowLayout.Tab label="kb.releation.sites">
@@ -77,7 +83,8 @@ const KbShow = () => {
                             target="kbId"
                             sort={{ field: 'id', order: 'DESC' }}
                         >
-                            <Datagrid rowClick='edit'>
+                            <Datagrid rowClick='show'>
+                                <TextField source="id" />
                                 <TextField source="title" />
                                 <TextField source="desc" />
                                 <UrlField source="hostname" />
@@ -86,8 +93,6 @@ const KbShow = () => {
                                         <TagsField />
                                     </SingleFieldList>
                                 </ArrayField>
-                                {/* <TextField source="pattern" />
-                                <TextField source="removeSelectors" /> */}
                             </Datagrid>
                         </ReferenceManyField>
                     </TabbedShowLayout.Tab>

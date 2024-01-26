@@ -1,9 +1,4 @@
-import { Fragment, useState } from 'react';
-import {
-    useRecordContext,
-    // ShowButton,
-    Title,
-} from 'react-admin';
+import { Fragment } from 'react';
 import {
     List,
     ListItem,
@@ -12,10 +7,12 @@ import {
     Collapse,
     ListItemIcon,
     Button,
+    ButtonGroup,
 } from '@mui/material';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-// import FolderIcon from '@mui/icons-material/FolderOpenRounded';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import ViewCozyOutlinedIcon from '@mui/icons-material/ViewCozyOutlined';
 import FolderOffRoundedIcon from '@mui/icons-material/FolderOffRounded';
 import FolderOpenRoundedIcon from '@mui/icons-material/FolderOpenRounded';
 
@@ -24,71 +21,7 @@ import HtmlIcon from '@mui/icons-material/Html';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import FormatIndentDecreaseIcon from '@mui/icons-material/FormatIndentDecrease';
-import { genPreviewLink } from '../utils/genPreviewLink';
-
-
-
-interface FileStatDto {
-    /**
-     * 文件名
-     */
-    name: string;
-    /**
-     * 文件路径
-     */
-    path: string;
-    /**
-     * 是否是目录
-     */
-    isDir: boolean;
-    /**
-     * 子目录
-     */
-    children?: FileStatDto[];
-}
-
-function previewBtnClick(kbId: string | number, file: FileStatDto) {
-    const endPoint = genPreviewLink(kbId, file.path)
-    window.open(endPoint, file.path);
-
-}
-
-interface TreeProps {
-    roots: FileStatDto[];
-    title: string;
-}
-
-const DirTree = ({ roots, title }: TreeProps) => {
-
-    const [openChildren, setOpenChildren] = useState<string[]>([]);
-    const toggleNode = (node: FileStatDto) =>
-        setOpenChildren(state => {
-            if (state.includes(node.path)) {
-                return [
-                    ...state.splice(0, state.indexOf(node.path)),
-                    ...state.splice(state.indexOf(node.path) + 1, state.length),
-                ];
-            } else {
-                return [...state, node.path];
-            }
-        });
-
-    return (
-        <List>
-            <Title defaultTitle={title} />
-            {roots.map(root => (
-                <SubTree
-                    key={root.path}
-                    root={root}
-                    childNodes={root.children}
-                    openChildren={openChildren}
-                    toggleNode={toggleNode}
-                    level={1}
-                />
-            ))}
-        </List>
-    );
-};
+import { FileStatDto } from '../../interfaces';
 
 interface SubTreeProps {
     level: number;
@@ -97,14 +30,15 @@ interface SubTreeProps {
     openChildren: string[];
     // eslint-disable-next-line no-unused-vars
     toggleNode(root: FileStatDto): void
+    // eslint-disable-next-line no-unused-vars
+    preview(file: FileStatDto): void
+    // eslint-disable-next-line no-unused-vars
+    deletePath(file: FileStatDto): void
 }
 
-// function previewFile(file: FileStatDto) {
-//     const serverUrl = `${import.meta.env.VITE_SERVER_HOST}/api/files/`;
-// }
-
-const SubTree = ({ level, root, childNodes, openChildren, toggleNode }: SubTreeProps) => {
-    const record = useRecordContext();
+export const SubTree = ({ 
+    level, root, childNodes, openChildren, toggleNode, preview, 
+    deletePath } : SubTreeProps) => {
     const hasChildren = childNodes && childNodes.length > 0;
     const open = openChildren.includes(root.path);
 
@@ -112,7 +46,7 @@ const SubTree = ({ level, root, childNodes, openChildren, toggleNode }: SubTreeP
 
     let icon = null;
     if (root.isDir) {
-        icon = open ? <FolderOpenRoundedIcon /> :<FolderOffRoundedIcon />;
+        icon = open ? <FolderOpenRoundedIcon /> : <FolderOffRoundedIcon />;
     } else {
         const ext = root.path.split('.').pop();
 
@@ -145,7 +79,7 @@ const SubTree = ({ level, root, childNodes, openChildren, toggleNode }: SubTreeP
             >
                 {hasChildren && open && <ExpandLess />}
                 {hasChildren && !open && <ExpandMore />}
-    
+
                 {!hasChildren && <div style={{ width: 24 }}>&nbsp;</div>}
 
                 <ListItemIcon>
@@ -154,7 +88,18 @@ const SubTree = ({ level, root, childNodes, openChildren, toggleNode }: SubTreeP
                 <ListItemText primary={displayPath} />
 
                 <ListItemSecondaryAction>
-                    {!root.isDir && <Button onClick={() => previewBtnClick(record.id, root)}> preview </Button>}
+                    <ButtonGroup variant="text" aria-label="text button group">
+                        <Button 
+                            onClick={() => deletePath(root)}
+                            startIcon={<DeleteOutlineIcon />}>
+                            delete
+                        </Button>
+                        {!root.isDir && <Button
+                            onClick={() => preview(root)}
+                            startIcon={<ViewCozyOutlinedIcon />}>
+                            preview
+                        </Button>}
+                    </ButtonGroup>
                 </ListItemSecondaryAction>
             </ListItem>
             <Collapse in={open} timeout="auto" unmountOnExit>
@@ -167,6 +112,8 @@ const SubTree = ({ level, root, childNodes, openChildren, toggleNode }: SubTreeP
                             openChildren={openChildren}
                             toggleNode={toggleNode}
                             level={level + 1}
+                            deletePath={deletePath}
+                            preview={preview}
                         />
                     ))}
                 </List>
@@ -174,5 +121,3 @@ const SubTree = ({ level, root, childNodes, openChildren, toggleNode }: SubTreeP
         </Fragment>
     );
 };
-
-export default DirTree;

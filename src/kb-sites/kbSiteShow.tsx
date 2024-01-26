@@ -1,4 +1,4 @@
-
+import { useState } from 'react';
 import {
     DateField,
     ReferenceField,
@@ -13,63 +13,42 @@ import {
     Datagrid,
     ArrayField,
     SingleFieldList,
-    ChipField,
     useRecordContext,
+    WrapperField,
+    TextInput,
+    TopToolbar,
+    FilterButton
 } from 'react-admin';
 import {
     Button,
+    Collapse,
+    ButtonGroup,
 } from '@mui/material';
-
-import { genPreviewLink } from '../utils/genPreviewLink';
 
 
 import DiskFiles from '../components/DiskFiles';
-
-
-const PreviewBtn = () => {
-    const record = useRecordContext();
-    const endPoint = genPreviewLink(record.kbId, record.filePath);
-
-    function btnClick() {
-        window.open(endPoint, record.filePath);
-    }
-
-    return (
-        <Button onClick={btnClick}>
-            preview
-        </Button>
-    )
-}
-
-
-/**
- * tagsField
- * @returns 
- */
-const TagsField = () => {
-    const record = useRecordContext();
-
-    return (
-        <ChipField
-            record={{ name: record }}
-            source="name"
-        />
-    )
-}
-
+import { PreviewBtn } from '../components/PreviewBtn';
+import { SyncPageBtn } from '../components/SyncPageBtn';
+import { Crawler } from '../components/Crawler/Crawler';
+import { TagsField } from '../components/fields/TagsField';
 
 
 const DiskFileTab = () => {
     const record = useRecordContext();
 
     return (
-        <DiskFiles subDir={ record.title } />
+        <DiskFiles kbId={record.kbId} subDir={ record.title } />
     )
 }
 
 
 const KbSiteShow = () => {
+    const [open, setOpen] = useState(true);
     const controllerProps = useShowController();
+
+    const handleCollapseClick = () => {
+        setOpen(!open);
+    };
 
     return (
         <ShowContextProvider value={controllerProps}>
@@ -79,8 +58,17 @@ const KbSiteShow = () => {
                         <TextField source="id" />
                         <TextField source="title" />
                         <TextField source="desc" />
-                        <TextField source="pattern" />
                         <UrlField source="hostname" />
+                        <ArrayField source="matchPatterns">
+                            <SingleFieldList>
+                                <TagsField />
+                            </SingleFieldList>
+                        </ArrayField> 
+                        <ArrayField source="ignorePatterns">
+                            <SingleFieldList>
+                                <TagsField />
+                            </SingleFieldList>
+                        </ArrayField> 
                         <ArrayField source="startUrls">
                             <SingleFieldList>
                                 <TagsField />
@@ -97,20 +85,37 @@ const KbSiteShow = () => {
                         <DateField source="createdAt" cellClassName="createdAt" showTime />
                     </TabbedShowLayout.Tab>
 
+                
                     <TabbedShowLayout.Tab label="kb-site.releation.files">
+                        <Button onClick={handleCollapseClick}>
+                            CRAWLER
+                        </Button>
+                        <Collapse in={open}>
+                            <Crawler />
+                        </Collapse>
                         <ReferenceManyField
                             reference="kb-files"
                             target="siteId"
                             sort={{ field: 'id', order: 'DESC' }}
                         >
+                            
+                            {/* 使用 coll */}
                             <Datagrid>
                                 <TextField source="filePath" />
                                 <TextField source="fileExt" />
                                 <TextField source="sourceType" />
                                 <TextField source="sourceUrl" />
-                                <PreviewBtn />
+                                <WrapperField label="op">
+                                    <ButtonGroup variant="text" aria-label="loading button group">
+                                        <PreviewBtn />
+                                        <SyncPageBtn />
+                                    </ButtonGroup>
+                                </WrapperField>
+                        
                             </Datagrid>
+                            
                         </ReferenceManyField>
+
                     </TabbedShowLayout.Tab>
 
 

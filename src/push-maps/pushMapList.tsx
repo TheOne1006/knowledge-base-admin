@@ -2,7 +2,6 @@ import {
     List,
     DatagridConfigurable,
     TextField,
-    DateField,
     ShowButton,
     DeleteButton,
     TopToolbar,
@@ -14,7 +13,12 @@ import {
     SelectInput,
     // ArrayInput,
     WrapperField,
+    ReferenceOneField,
 } from "react-admin";
+
+import { PushTypeField } from '../components/fields';
+import { PUSH_TYPE_CHOICES  } from '../constants';
+
 
 const listFilter = [
     <ReferenceInput key="kbId" source="kbId" reference="kbs" >
@@ -23,7 +27,7 @@ const listFilter = [
     <ReferenceInput key="configId" source="configId" reference="push-configs" >
         <SelectInput optionText="title" optionValue="id" />
     </ReferenceInput>,
-    <TextInput key="type" source="type" defaultValue="" />,
+    <SelectInput  key="type" source="type" choices={PUSH_TYPE_CHOICES} />,
     <TextInput key="pushVersion" source="pushVersion" defaultValue="" />,
 ];
 
@@ -45,8 +49,12 @@ const PushMapList = (props: any) => (
         <DatagridConfigurable rowClick="show">
             <TextField source="id" />
             <TextField source="remoteId" cellClassName="remoteId" />
-            <TextField source="fileId" cellClassName="fileId" />
-            <TextField source="type" cellClassName="type" />
+
+            <ReferenceOneField target="id" source="fileId" reference="kb-files" >
+                <TextField source="filePath" />
+            </ReferenceOneField>
+
+            <PushTypeField source="type" cellClassName="type" />
             <TextField source="pushVersion" cellClassName="pushVersion" />
             <ReferenceField source="kbId" reference="kbs" link="show" >
                 <TextField source="title" />

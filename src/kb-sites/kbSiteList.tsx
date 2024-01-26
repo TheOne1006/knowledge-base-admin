@@ -13,7 +13,11 @@ import {
     UrlField,
     WrapperField,
     // ArrayInput,
+    ArrayField,
+    SingleFieldList,
 } from "react-admin";
+
+import { TagsField } from '../components/fields/TagsField';
 
 
 const listFilter = [
@@ -37,7 +41,16 @@ const KbSiteList = (props: any) => (
             <TextField source="title" cellClassName="title" />
             <TextField source="desc" cellClassName="desc" />
             <UrlField source="hostname" cellClassName="hostname" />
-            <TextField source="pattern" cellClassName="pattern" />
+            <ArrayField source="matchPatterns">
+                    <SingleFieldList>
+                        <TagsField />
+                    </SingleFieldList>
+                </ArrayField> 
+                <ArrayField source="ignorePatterns">
+                    <SingleFieldList>
+                        <TagsField />
+                    </SingleFieldList>
+                </ArrayField> 
             <DateField source="createdAt" cellClassName="createdAt" showTime />
             <DateField source="updatedAt" cellClassName="updatedAt" showTime />
             <WrapperField label="Edit">

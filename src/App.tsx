@@ -1,6 +1,6 @@
 
 import { Admin, Resource, ListGuesser, EditGuesser, ShowGuesser } from 'react-admin';
-import { dataProvider } from './dataProvider';
+import { dataProvider } from './dataProvider/dataProvider';
 import { authProvider } from './authProvider';
 import { LoginPage } from './pages/LoginPage';
 import { CustomLayout } from './pages/Layout';;

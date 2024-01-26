@@ -1,20 +1,16 @@
 
 import {
-    useRecordContext,
     Loading,
 } from 'react-admin';
 
 import { useQuery } from 'react-query';
-import { dataProvider } from '../dataProvider';
+import { dataProvider } from '../dataProvider/dataProvider';
 
-import DirTree from './DirTree';
+import { DirTree } from './DirTree/DirTree';
 
-
-export const DiskFiles = ({ subDir }: { subDir?: string }) => {
-    const record = useRecordContext();
-
+export const DiskFiles = ({ kbId, subDir }: { kbId: number, subDir?: string }) => {
     // fix: like useGetMany
-    const { isLoading, data, error } = useQuery(['getDiskFiles', record.id], () => dataProvider.getDiskFiles(record.id, subDir));
+    const { isLoading, data, error } = useQuery(['getDiskFiles', kbId], () => dataProvider.getDiskFiles(kbId, subDir));
 
     if (isLoading) { return <Loading />; }
     if (error) { return <p>ERROR</p>; }
