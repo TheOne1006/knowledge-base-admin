@@ -15,9 +15,7 @@ import {
     SingleFieldList,
     useRecordContext,
     WrapperField,
-    TextInput,
-    TopToolbar,
-    FilterButton
+    Pagination,
 } from 'react-admin';
 import {
     Button,
@@ -97,6 +95,7 @@ const KbSiteShow = () => {
                             reference="kb-files"
                             target="siteId"
                             sort={{ field: 'id', order: 'DESC' }}
+                            pagination={<Pagination />}
                         >
                             
                             {/* 使用 coll */}

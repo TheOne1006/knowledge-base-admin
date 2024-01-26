@@ -11,7 +11,8 @@ import {
     ReferenceManyField,
     DatagridConfigurable,
     WrapperField,
-    ReferenceOneField,
+    Pagination,
+    // ReferenceOneField,
 } from 'react-admin';
 
 import { PreviewBtn } from '../components/PreviewBtn';
@@ -52,6 +53,7 @@ const PushLogShow = () => {
                                 configId: controllerProps.record.configId ,
                                 kbId: controllerProps.record.kbId,
                             }}
+                            pagination={<Pagination />}
                         >
                             <DatagridConfigurable rowClick="show" >
                                 <ReferenceField source="configId" reference="push-configs" link="show" >
@@ -63,16 +65,15 @@ const PushLogShow = () => {
                                 <TextField source="pushVersion" />
                                 <TextField source="remoteId" />
 
-                                <ReferenceOneField 
-                                    target="id"
+                                <ReferenceField 
                                     source="fileId" reference="kb-files" link="show" >
                                     <TextField source="filePath" />
-                                </ReferenceOneField>
+                                </ReferenceField>
 
                                 <WrapperField label="preview">
-                                    <ReferenceOneField target="id" source="fileId" reference="kb-files" link="show" >
+                                    <ReferenceField source="fileId" reference="kb-files" link="show" >
                                         <PreviewBtn />
-                                    </ReferenceOneField>
+                                    </ReferenceField>
                                 </WrapperField>
                                 
                             </DatagridConfigurable>

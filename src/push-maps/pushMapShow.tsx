@@ -1,6 +1,6 @@
 import {
     DateField,
-    ReferenceOneField,
+    ReferenceField,
     ShowView,
     // SimpleShowLayout,
     TextField,
@@ -20,18 +20,18 @@ const PushMapShow = () => {
                 <TabbedShowLayout>
                     <TabbedShowLayout.Tab label="push-map.summary">
                         <TextField source="id" />
-                        <ReferenceOneField target="id" source="configId" reference="push-configs" link="show" >
+                        <ReferenceField source="configId" reference="push-configs" link="show" >
                             <TextField source="title" />
-                        </ReferenceOneField>
-                        <ReferenceOneField target="id" source="fileId" reference="kb-files" >
+                        </ReferenceField>
+                        <ReferenceField source="fileId" reference="kb-files" >
                             <TextField source="filePath" />
-                        </ReferenceOneField>
+                        </ReferenceField>
                         <PushTypeField source="type" cellClassName="type" />
                         <TextField source="pushVersion" />
                         <TextField source="remoteId" />
-                        <ReferenceOneField target="id" source="kbId" reference="kbs" link="show" >
+                        <ReferenceField source="kbId" reference="kbs" link="show" >
                             <TextField source="title" />
-                        </ReferenceOneField>
+                        </ReferenceField>
                         <DateField source="createdAt" cellClassName="createdAt" showTime />
                     </TabbedShowLayout.Tab>
 

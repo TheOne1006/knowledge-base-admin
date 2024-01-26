@@ -14,6 +14,7 @@ import {
     SingleFieldList,
     ChipField,
     useRecordContext,
+    Pagination,
 } from 'react-admin';
 import {
     Collapse,
@@ -59,6 +60,7 @@ const KbShow = () => {
                             reference="kb-files"
                             target="kbId"
                             sort={{ field: 'id', order: 'DESC' }}
+                            pagination={<Pagination />}
                         >
                             <Datagrid>
                                 <TextField source="id" />
@@ -82,6 +84,7 @@ const KbShow = () => {
                             reference="kb-sites"
                             target="kbId"
                             sort={{ field: 'id', order: 'DESC' }}
+                            pagination={<Pagination />}
                         >
                             <Datagrid rowClick='show'>
                                 <TextField source="id" />

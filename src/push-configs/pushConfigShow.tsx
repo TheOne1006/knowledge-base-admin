@@ -1,4 +1,4 @@
-
+import { useState } from 'react';
 import {
     DateField,
     ReferenceField,
@@ -10,16 +10,43 @@ import {
     TabbedShowLayout,
     useShowController,
     ReferenceManyField,
-    DatagridConfigurable,
+    Datagrid,
     ReferenceOneField,
     WrapperField,
+    Pagination,
+    DatagridConfigurable,
+    useRecordContext,
 } from 'react-admin';
+import {
+    Button,
+    Collapse,
+    ButtonGroup,
+} from '@mui/material';
 
 import { PushTypeField } from '../components/fields';
 import { PreviewBtn } from '../components/PreviewBtn';
+import { PushForm, SigleClearBtn, SiglePushBtn } from '../components/Push';
+
+
+const OpButtons = ({ configId }: { configId: number | string }) => {
+    const record = useRecordContext();
+    return (
+        <ButtonGroup disableElevation size="small" variant="outlined" aria-label="outlined button group">
+            <SiglePushBtn configId={configId}  fileId={record.id} />
+            <PreviewBtn label='Preview' />
+            <SigleClearBtn configId={configId} fileId={record.id} />
+        </ButtonGroup>
+    )
+}
 
 const PushConfigShow = () => {
+    const [open, setOpen] = useState(true);
+    
     const controllerProps = useShowController();
+
+    const handleCollapseClick = () => {
+        setOpen(!open);
+    };
     return (
         <ShowContextProvider value={controllerProps}>
             <ShowView>
@@ -28,8 +55,8 @@ const PushConfigShow = () => {
                         <TextField source="id" />
                         <TextField source="title" />
                         <TextField source="desc" />
-                        <TextField source="apiUrl" />
-                        <UrlField source="apiKey" />
+                        <UrlField source="apiUrl" />
+                        <TextField source="apiKey" />
                         <ReferenceField source="kbId" reference="kbs" >
                             <TextField source="title" />
                         </ReferenceField>
@@ -37,43 +64,109 @@ const PushConfigShow = () => {
                     </TabbedShowLayout.Tab>
 
                     <TabbedShowLayout.Tab label="push-configs.releation.push-maps">
+                        <Button onClick={handleCollapseClick}>
+                            Sync
+                        </Button>
+                        <Collapse in={open}>
+                            <PushForm />
+                        </Collapse>
                         <ReferenceManyField
                             debounce={1000}
                             reference="push-maps"
                             target="configId"
                             source="id"
                             sort={{ field: 'id', order: 'DESC' }}
+                            pagination={<Pagination />}
                         >
-                                <DatagridConfigurable rowClick="show" >
-                                    <ReferenceOneField target='id' source="configId" reference="push-configs" link="show" >
+                                <Datagrid rowClick="show" >
+                                    <ReferenceField 
+                                    source="configId" reference="push-configs" link="show" >
                                         <TextField source="title" />
-                                    </ReferenceOneField>
+                                    </ReferenceField>
                                     <PushTypeField source="type" />
 
                                     <TextField source="pushVersion" />
                                     <TextField source="remoteId" />
 
-                                    <ReferenceOneField
-                                    source="fileId" target='id' reference="kb-files" link="show" >
+                                    <ReferenceField
+                                    source="fileId" 
+                                    reference="kb-files" link="show" >
                                         <TextField source="filePath" />
-                                    </ReferenceOneField>
+                                    </ReferenceField>
 
                                     <WrapperField label="preview">
-                                    <ReferenceOneField target='id' source="fileId" reference="kb-files" link="show" >
+                                    <ReferenceField source="fileId" reference="kb-files" link="show" >
                                             <PreviewBtn />
-                                        </ReferenceOneField>
+                                    </ReferenceField>
                                     </WrapperField>
 
-                                </DatagridConfigurable>
+                                </Datagrid>
                         
                         </ReferenceManyField>
                     </TabbedShowLayout.Tab>
 
+                    <TabbedShowLayout.Tab label="releation.push-logs">
+                        <ReferenceManyField
+                            debounce={1000}
+                            reference="push-logs"
+                            target="configId"
+                            source="id"
+                            sort={{ field: 'id', order: 'DESC' }}
+                            pagination={<Pagination />}
+                        >
+                            <Datagrid rowClick="show" >
+                                <TextField source="configId" />
+                                <PushTypeField source="type" />
+
+                                <TextField source="pushVersion" />
+                                <DateField source="createdAt" cellClassName="createdAt" showTime />
+                            </Datagrid>
+
+                        </ReferenceManyField>
+                    </TabbedShowLayout.Tab>
+
+                    <TabbedShowLayout.Tab label="releation.kb-files">
+                        <ReferenceManyField
+                            debounce={1000}
+                            reference="kb-files"
+                            target="kbId"
+                            source="id"
+                            label=""
+                            sort={{ field: 'id', order: 'DESC' }}
+                            pagination={<Pagination />}
+                        >
+                            <DatagridConfigurable rowClick="show" >
+                                <TextField source="id" />
+                                <TextField source="filePath" />
+                                <TextField source="sourceType" />
+                                    {
+                                        controllerProps?.record?.id ? (
+                                            <ReferenceOneField
+                                                label="map.pushVersion"
+                                                source="id"
+                                                reference="push-maps"
+                                                target="fileId"
+                                                filter={{
+                                                    configId: controllerProps.record.id,
+                                                }}
+                                            >
+                                                <TextField source="pushVersion" />
+                                            </ReferenceOneField>
+                                        ): null
+                                    }
+                                <DateField source="createdAt" cellClassName="createdAt" showTime />
+                                 <WrapperField label="op">
+                                    {
+                                        controllerProps?.record?.id ? (
+                                            <OpButtons configId={controllerProps.record.id} />
+                                        ) : null
+                                    }
+                                </WrapperField>
+                            </DatagridConfigurable>
+
+                        </ReferenceManyField>
+                    </TabbedShowLayout.Tab>
                 </TabbedShowLayout>
-
-             
-
-                {/* logs */}
             </ShowView>
         </ShowContextProvider>
     )

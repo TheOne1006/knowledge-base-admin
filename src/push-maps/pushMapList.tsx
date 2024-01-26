@@ -13,7 +13,7 @@ import {
     SelectInput,
     // ArrayInput,
     WrapperField,
-    ReferenceOneField,
+    // ReferenceOneField,
 } from "react-admin";
 
 import { PushTypeField } from '../components/fields';
@@ -50,9 +50,9 @@ const PushMapList = (props: any) => (
             <TextField source="id" />
             <TextField source="remoteId" cellClassName="remoteId" />
 
-            <ReferenceOneField target="id" source="fileId" reference="kb-files" >
+            <ReferenceField source="fileId" reference="kb-files" >
                 <TextField source="filePath" />
-            </ReferenceOneField>
+            </ReferenceField>
 
             <PushTypeField source="type" cellClassName="type" />
             <TextField source="pushVersion" cellClassName="pushVersion" />

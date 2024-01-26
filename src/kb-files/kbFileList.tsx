@@ -22,15 +22,16 @@ import {
 } from '@mui/material';
 import { PreviewBtn } from '../components/PreviewBtn';
 import { SyncPageBtn } from '../components/SyncPageBtn';
+import { FILE_SOURCE_TYPE_CHOICES, FILE_EXT_CHOICES } from '../constants';
 
 const listFilter = [
     <TextInput key="filePath" source="filePath" defaultValue="" />,
     <ReferenceInput key="kbId" source="kbId" reference="kbs" >
         <SelectInput optionText="title" optionValue="id" />
     </ReferenceInput>,
-    <TextInput key="fileExt" source="fileExt" defaultValue="" />,
+    <SelectInput key="fileExt" source="fileExt" choices={FILE_EXT_CHOICES} />,
+    <SelectInput key="sourceType" source="sourceType" choices={FILE_SOURCE_TYPE_CHOICES} />,
     // <TextInput key="kbId" source="kbId" defaultValue="" />,
-    <TextInput key="sourceType" source="sourceType" defaultValue="" />,
     <TextInput key="sourceUrl" source="sourceUrl" defaultValue="" />,
 ];
 

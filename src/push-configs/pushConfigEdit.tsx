@@ -3,15 +3,19 @@ import {
     SimpleForm,
     TextInput,
     useRecordContext,
-    ArrayInput,
-    SimpleFormIterator,
+    // ArrayInput,
+    // SimpleFormIterator,
     DateTimeInput,
     ReferenceInput,
+    SelectInput,
+    required,
 } from "react-admin";
+
+import { PUSH_TYPE_CHOICES } from '../constants';
 
 const PushConfigTitle = () => {
     const record = useRecordContext();
-    return <span>Knowledge Base : {record?.title}</span>;
+    return <span>Push Config : {record?.title}</span>;
 };
 
 const PushConfigEdit = (props: any) => (
@@ -20,19 +24,17 @@ const PushConfigEdit = (props: any) => (
             <ReferenceInput disabled source="kbId" reference="kbs" link="edit" label="kbId" >
                 <TextInput disabled source="title" label="kb.title" />
             </ReferenceInput>
-            <TextInput source="title" />
-            <TextInput source="desc" />
-            <TextInput source="hostname" fullWidth />
-            <ArrayInput source="startUrls" >
-                <SimpleFormIterator inline fullWidth>
-                    <TextInput source={''} />
-                </SimpleFormIterator>
-            </ArrayInput>
-            <ArrayInput source="removeSelectors">
-                <SimpleFormIterator inline fullWidth>
-                    <TextInput source={''} />
-                </SimpleFormIterator>
-            </ArrayInput>
+            <SelectInput source="type" validate={required()} choices={PUSH_TYPE_CHOICES} />
+            <TextInput
+                autoFocus
+                source="title"
+                validate={required('Required field')}
+                variant="outlined"
+                fullWidth
+            />
+            <TextInput variant="outlined" source="desc" multiline fullWidth />
+            <TextInput variant="outlined" source="apiUrl" validate={required()} fullWidth />
+            <TextInput variant="outlined" source="apiKey" validate={required()} fullWidth />
             <DateTimeInput disabled source="createdAt" />
             <DateTimeInput disabled source="updatedAt" />
         </SimpleForm>

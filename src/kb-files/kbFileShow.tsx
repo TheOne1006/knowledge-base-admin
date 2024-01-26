@@ -28,7 +28,6 @@ const KbFileShow = () => {
                         <UrlField source="sourceUrl" />
                         <ReferenceField source="kbId" reference="kbs" link="show" >
                             <TextField source="title" />
-                            <TextField source="desc" />
                         </ReferenceField>
                         <ReferenceField source="siteId" reference="kb-sites" link="show" >
                             <TextField source="title" />

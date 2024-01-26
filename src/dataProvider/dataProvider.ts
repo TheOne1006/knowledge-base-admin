@@ -1,3 +1,4 @@
+import { stringify } from 'query-string';
 import { fetchUtils, HttpError } from 'react-admin';
 import { Observable } from 'rxjs';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
@@ -6,7 +7,7 @@ import type { Identifier } from 'react-admin';
 import jsonServerProvider from "ra-data-json-server";
 
 import { FatalError, RetriableError } from './customError';
-import { CrawlerItem } from './interface';
+import { CrawlerItem, PushItem, ClearPushResDto } from '../interfaces';
 
 export const httpClient = async (url: string, options: fetchUtils.Options = {}) => {
     const token = localStorage.getItem(`${import.meta.env.VITE_APP_COOKIE_PREFIX}token`);
@@ -27,7 +28,7 @@ export const httpClient = async (url: string, options: fetchUtils.Options = {}) 
         headers: customHeaders,
         user
     });
-    console.log('fetchJson result', { status, headers, body, json });
+    // console.log('fetchJson result', { status, headers, body, json });
     return { status, headers, body, json };
 }
 
@@ -66,6 +67,24 @@ export const dataProvider = {
                 
             }
         }
+    },
+    getMany: (resource: string, params: any) => {
+        const endUrlPoint = buildEndPoint(resource);
+
+        let query = {};
+
+        if (params.ids.length > 1) {
+            query = {
+                ids: params.ids,
+            };
+        } else {
+            query = {
+                id: params.ids[0],
+            }
+        }
+    
+        const url = `${endUrlPoint}?${stringify(query, { arrayFormat: 'comma' })}`;
+        return httpClient(url).then(({ json }) => ({ data: json }));
     },
     getDiskFiles: async (kbId: Identifier, subDir?: string) => {
 
@@ -155,11 +174,7 @@ export const dataProvider = {
 
         });
 
-
-
         return observable;
-
-
     },
     kbUpload: async (kbId: Identifier, body: any) => {
         const endUrlPoint = buildEndPoint(`kbs/${kbId}/upload`);
@@ -195,7 +210,108 @@ export const dataProvider = {
         });
 
         return result;
-    }
+    },
+
+    runPush: (pushConfigId: Identifier, pushVersion: string): Observable<PushItem> => {
+        const endUrlPoint = buildEndPoint(`push/${pushConfigId}/run`);
+        const token = localStorage.getItem(`${import.meta.env.VITE_APP_COOKIE_PREFIX}token`);
+
+        const ctrl = new AbortController();
+
+        const observable = new Observable<PushItem>(subscriber => {
+
+            fetchEventSource(endUrlPoint, {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    ['Content-Type']: 'application/json',
+                    ['Access-Control-Allow-Origin']: '*',
+                    token: `Bearer ${token}`
+                },
+                body: JSON.stringify({ pushVersion }),
+                signal: ctrl.signal,
+                async onopen(response) {
+                    if (response.ok) {
+                        return; // everything's good
+                    } else if (response.status >= 400 && response.status < 500 && response.status !== 429) {
+                        // client-side errors are usually non-retriable:
+                        throw new Error('Client error');
+                    } else {
+                        ctrl.abort();
+                        throw new RetriableError();
+                    }
+                },
+                onmessage(msg) {
+                    // if the server emits an error message, throw an exception
+                    // so it gets handled by the onerror callback below:
+                    if (msg.event === 'FatalError') {
+                        throw new FatalError(msg.data);
+                    }
+                    if (!msg.data) {
+                        return;
+                    }
+
+                    try {
+                        const jsonData = JSON.parse(msg.data) as PushItem;
+                        subscriber.next(jsonData);
+
+                        if (jsonData.finish) {
+                            subscriber.complete();
+                            ctrl.abort();
+                        }
+                    } catch (error) {
+                        throw new FatalError('json parsing error');
+                    }
+
+                },
+                onclose() {
+                    ctrl.abort();
+                    throw new RetriableError();
+                },
+                onerror(err) {
+                    if (err instanceof FatalError) {
+                        ctrl.abort();
+                        throw err; 
+                    } else {
+                        // do nothing to automatically retry. You can also
+                        // return a specific retry interval here.
+                    }
+                }
+            });
+
+        });
+
+        return observable;
+    },
+    runSiglePush: async (pushConfigId: Identifier, fileId: Identifier) => {
+        const endUrlPoint = buildEndPoint(`push/${pushConfigId}/run/${fileId}`);
+
+        const { json: result } = await httpClient(endUrlPoint, {
+            method: 'POST',
+        });
+
+        return result;
+    },
+    clearAllPushMap: async (pushConfigId: Identifier, pushVersion: string): Promise<ClearPushResDto> => {
+        const endUrlPoint = buildEndPoint(`push/${pushConfigId}/clearAll`);
+
+        const { json: result } = await httpClient(endUrlPoint, {
+            method: 'DELETE',
+            body: JSON.stringify({ pushVersion }),
+        });
+
+        return result as ClearPushResDto;
+    },
+    clearSiglePushMapWithFileId: async (pushConfigId: Identifier, fileId: Identifier) => {
+        const endUrlPoint = buildEndPoint(`push/${pushConfigId}/clear/${fileId}`);
+
+        const { json: result } = await httpClient(endUrlPoint, {
+            method: 'DELETE',
+        });
+
+        return result;
+    },
+
 }
 
 

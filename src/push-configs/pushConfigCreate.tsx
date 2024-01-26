@@ -8,6 +8,8 @@ import {
     SelectInput,
 } from "react-admin";
 
+import { PUSH_TYPE_CHOICES } from '../constants'
+
 const PushConfigCreate = (props: any) => {
     return (
         <Create {...props} undoable={false}>
@@ -15,17 +17,18 @@ const PushConfigCreate = (props: any) => {
                 <ReferenceInput source="kbId" reference="kbs" >
                     <SelectInput optionText="title" optionValue="id" validate={required()} />
                 </ReferenceInput>
+                <SelectInput source="type" validate={required()} choices={PUSH_TYPE_CHOICES} />
                 <TextInput
                     autoFocus
                     source="title"
                     validate={required('Required field')}
+                    variant="outlined"
+                    fullWidth
                 />
-                <TextInput source="desc" multiline fullWidth />
-                <TextInput source="apiUrl" validate={required()} fullWidth />
-                <TextInput source="apiKey" validate={required()} fullWidth />
-                <SelectInput source="type" validate={required()} fullWidth choices={[
-                    { id: 'dify', name: 'Dify' },
-                ]} />
+                <TextInput variant="outlined" source="desc" multiline fullWidth />
+                <TextInput variant="outlined" source="apiUrl" validate={required()} fullWidth />
+                <TextInput variant="outlined" source="apiKey" validate={required()} fullWidth />
+
             </SimpleForm>
         </Create>
     )
