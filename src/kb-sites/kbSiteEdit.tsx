@@ -9,11 +9,15 @@ import {
     ReferenceField,
     TextField,
     DateTimeInput,
+    SelectArrayInput,
 } from "react-admin";
+
+import { TypescriptEditInput } from '../components/inputs';
+import { CRAWLER_ENGINE_TYPE_CHOICES, FILE_EXT_CHOICES  } from '../constants';
 
 const KbSiteTitle = () => {
     const record = useRecordContext();
-    return <span>Knowledge Base : {record?.title}</span>;
+    return <span> Site : {record?.title}</span>;
 };
 
 const KbSiteEdit = (props: any) => (
@@ -45,6 +49,9 @@ const KbSiteEdit = (props: any) => (
                     <TextInput source="" variant="outlined" />
                 </SimpleFormIterator>
             </ArrayInput>
+            <SelectArrayInput source='engineType' choices={CRAWLER_ENGINE_TYPE_CHOICES} />
+            <SelectArrayInput source='fileSuffix' choices={FILE_EXT_CHOICES} />
+            <TypescriptEditInput source="evaluate" />
             <DateTimeInput disabled source="createdAt" />
             <DateTimeInput disabled source="updatedAt" />
         </SimpleForm>

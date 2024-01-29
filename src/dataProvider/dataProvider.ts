@@ -47,7 +47,7 @@ function buildEndPoint(endPoint: string) {
 
 export const dataProvider = {
     ...baseDataProvider,
-    create: async (resource: string, params: any) => {
+    create: async (resource: string, params: any): Promise<any> => {
         const endUrlPoint = buildEndPoint(resource);
 
         try {
@@ -257,9 +257,12 @@ export const dataProvider = {
 
                         if (jsonData.finish) {
                             subscriber.complete();
+                            subscriber.unsubscribe();
                             ctrl.abort();
                         }
                     } catch (error) {
+                        subscriber.unsubscribe()
+                        ctrl.abort();
                         throw new FatalError('json parsing error');
                     }
 
@@ -269,8 +272,12 @@ export const dataProvider = {
                     throw new RetriableError();
                 },
                 onerror(err) {
+
+                    console.log('onerror', err);
+                     ctrl.abort();
+
                     if (err instanceof FatalError) {
-                        ctrl.abort();
+                        // ctrl.abort();
                         throw err; 
                     } else {
                         // do nothing to automatically retry. You can also

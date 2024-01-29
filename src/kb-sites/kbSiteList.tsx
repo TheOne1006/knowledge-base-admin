@@ -12,12 +12,12 @@ import {
     TextInput,
     UrlField,
     WrapperField,
+    SelectField,
     // ArrayInput,
-    ArrayField,
-    SingleFieldList,
+    // ArrayField,
+    // SingleFieldList,
 } from "react-admin";
-
-import { TagsField } from '../components/fields/TagsField';
+import { CRAWLER_ENGINE_TYPE_CHOICES } from '../constants';
 
 
 const listFilter = [
@@ -41,17 +41,7 @@ const KbSiteList = (props: any) => (
             <TextField source="title" cellClassName="title" />
             <TextField source="desc" cellClassName="desc" />
             <UrlField source="hostname" cellClassName="hostname" />
-            <ArrayField source="matchPatterns">
-                    <SingleFieldList>
-                        <TagsField />
-                    </SingleFieldList>
-                </ArrayField> 
-                <ArrayField source="ignorePatterns">
-                    <SingleFieldList>
-                        <TagsField />
-                    </SingleFieldList>
-                </ArrayField> 
-            <DateField source="createdAt" cellClassName="createdAt" showTime />
+            <SelectField source="engineType" choices={CRAWLER_ENGINE_TYPE_CHOICES} />
             <DateField source="updatedAt" cellClassName="updatedAt" showTime />
             <WrapperField label="Edit">
                 <EditButton />

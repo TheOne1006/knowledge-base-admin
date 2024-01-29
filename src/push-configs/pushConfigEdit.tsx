@@ -6,11 +6,12 @@ import {
     // ArrayInput,
     // SimpleFormIterator,
     DateTimeInput,
-    ReferenceInput,
+    // ReferenceInput,
     SelectInput,
     required,
 } from "react-admin";
 
+import { JSONEditInput } from '../components/inputs';
 import { PUSH_TYPE_CHOICES } from '../constants';
 
 const PushConfigTitle = () => {
@@ -21,20 +22,18 @@ const PushConfigTitle = () => {
 const PushConfigEdit = (props: any) => (
     <Edit undoable={false} title={<PushConfigTitle />} {...props}>
         <SimpleForm>
-            <ReferenceInput disabled source="kbId" reference="kbs" link="edit" label="kbId" >
-                <TextInput disabled source="title" label="kb.title" />
-            </ReferenceInput>
             <SelectInput source="type" validate={required()} choices={PUSH_TYPE_CHOICES} />
             <TextInput
                 autoFocus
                 source="title"
-                validate={required('Required field')}
+                validate={required()}
                 variant="outlined"
                 fullWidth
             />
             <TextInput variant="outlined" source="desc" multiline fullWidth />
             <TextInput variant="outlined" source="apiUrl" validate={required()} fullWidth />
             <TextInput variant="outlined" source="apiKey" validate={required()} fullWidth />
+            <JSONEditInput source="additional" fullWidth />
             <DateTimeInput disabled source="createdAt" />
             <DateTimeInput disabled source="updatedAt" />
         </SimpleForm>

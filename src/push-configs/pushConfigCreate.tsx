@@ -9,6 +9,7 @@ import {
 } from "react-admin";
 
 import { PUSH_TYPE_CHOICES } from '../constants'
+import { JSONEditInput } from '../components/inputs';
 
 const PushConfigCreate = (props: any) => {
     return (
@@ -26,6 +27,7 @@ const PushConfigCreate = (props: any) => {
                     fullWidth
                 />
                 <TextInput variant="outlined" source="desc" multiline fullWidth />
+                <JSONEditInput source="additional" fullWidth />
                 <TextInput variant="outlined" source="apiUrl" validate={required()} fullWidth />
                 <TextInput variant="outlined" source="apiKey" validate={required()} fullWidth />
 

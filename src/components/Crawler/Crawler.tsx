@@ -12,7 +12,7 @@ import Grid from '@mui/material/Grid';
 import ArrowCircleDownOutlinedIcon from '@mui/icons-material/ArrowCircleDownOutlined';
 import { LinearProgressWithLabel } from '../LinearProgressWithLabel';
 import { useCrawler } from './useCrawler';
-import { CRAWLER_TYPE_CHOICES,  CRAWLER_TYPE_INCREMENTAL } from '../../constants';
+import { CRAWLER_DATA_TYPE_CHOICES, CRAWLER_DATA_TYPE_INCREMENTAL } from '../../constants';
 
 const CrawlerToolbar = () => (
     <Toolbar>
@@ -44,9 +44,9 @@ export const Crawler = () => {
                     <Grid item xs={12}>
                         <SelectInput
                             variant="outlined"
-                            defaultValue={CRAWLER_TYPE_INCREMENTAL}
+                            defaultValue={CRAWLER_DATA_TYPE_INCREMENTAL}
                             source="type"
-                            choices={CRAWLER_TYPE_CHOICES}
+                            choices={CRAWLER_DATA_TYPE_CHOICES}
                             validate={required()}
                         />
                     </Grid>

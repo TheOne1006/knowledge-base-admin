@@ -23,7 +23,7 @@ import {
     ButtonGroup,
 } from '@mui/material';
 
-import { PushTypeField } from '../components/fields';
+import { PushTypeField, JSONEditField } from '../components/fields';
 import { PreviewBtn } from '../components/PreviewBtn';
 import { PushForm, SigleClearBtn, SiglePushBtn } from '../components/Push';
 
@@ -60,6 +60,7 @@ const PushConfigShow = () => {
                         <ReferenceField source="kbId" reference="kbs" >
                             <TextField source="title" />
                         </ReferenceField>
+                        <JSONEditField source="additional" />
                         <DateField source="createdAt" cellClassName="createdAt" showTime />
                     </TabbedShowLayout.Tab>
 

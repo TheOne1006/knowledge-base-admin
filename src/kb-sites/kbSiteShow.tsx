@@ -16,6 +16,7 @@ import {
     useRecordContext,
     WrapperField,
     Pagination,
+    SelectField,
 } from 'react-admin';
 import {
     Button,
@@ -28,8 +29,10 @@ import DiskFiles from '../components/DiskFiles';
 import { PreviewBtn } from '../components/PreviewBtn';
 import { SyncPageBtn } from '../components/SyncPageBtn';
 import { Crawler } from '../components/Crawler/Crawler';
-import { TagsField } from '../components/fields/TagsField';
+// import { TagsField } from '../components/fields/TagsField';
+import { TypescriptEditField, TagsField } from '../components/fields';
 
+import { CRAWLER_ENGINE_TYPE_CHOICES, FILE_EXT_CHOICES } from '../constants';
 
 const DiskFileTab = () => {
     const record = useRecordContext();
@@ -77,9 +80,12 @@ const KbSiteShow = () => {
                                 <TagsField />
                             </SingleFieldList>
                         </ArrayField>
+                        <SelectField source="engineType" choices={CRAWLER_ENGINE_TYPE_CHOICES} />
+                        <SelectField source="fileSuffix" choices={FILE_EXT_CHOICES} />
                         <ReferenceField source="kbId" reference="kbs" >
                             <TextField source="title" />
                         </ReferenceField>
+                        <TypescriptEditField source="evaluate" />
                         <DateField source="createdAt" cellClassName="createdAt" showTime />
                     </TabbedShowLayout.Tab>
 
