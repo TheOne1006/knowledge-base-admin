@@ -27,7 +27,7 @@ export const Crawler = () => {
         <>
             <Confirm
                 isOpen={open}
-                loading={false}
+                loading={!open}
                 title="Crawler Process"
                 content={<>
                     <p>current: {plan?.url} {plan?.completed && 'success'}</p>

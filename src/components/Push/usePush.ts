@@ -8,6 +8,8 @@ import {
 import { dataProvider } from '../../dataProvider/dataProvider';
 import { PushItem } from '../../interfaces';
 
+let globalCtrl: AbortController | null = null;
+
 export const usePush = () => {
     const refresh = useRefresh();
     const notify = useNotify();
@@ -17,10 +19,15 @@ export const usePush = () => {
     const [open, setOpen] = useState(false);
     const [plan, setPlan] = useState<PushItem>();
 
-    function startRunPush(data: any) {
+    async function startRunPush(data: any) {
+        if (globalCtrl) {
+            globalCtrl.abort();
+        }
+        const ctrl = new AbortController();
+        globalCtrl = ctrl;
         const { kbId, pushVersion } = pick(data, ['kbId', 'pushVersion']);
         // config.id 
-        const pushObser = dataProvider.runPush(kbId, pushVersion);
+        const pushObser = await dataProvider.runPush(kbId, pushVersion, ctrl);
 
         setOpen(true);
         setLoading(true);
@@ -32,6 +39,7 @@ export const usePush = () => {
                 console.log('error', error);
             },
             complete: () => {
+                ctrl.abort();
                 setOpen(false);
                 setLoading(false);
                 notify('push finish', {
@@ -44,12 +52,18 @@ export const usePush = () => {
     }
 
     function handleConfirm() {
+        if (globalCtrl) {
+            globalCtrl.abort();
+        }
         setOpen(false);
         setLoading(false);
         refresh();
     }
 
     function handleDialogClose() {
+        if (globalCtrl) {
+            globalCtrl.abort();
+        }
         setOpen(false);
         setLoading(false);
         refresh();

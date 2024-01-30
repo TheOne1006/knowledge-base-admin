@@ -1,21 +1,21 @@
 import { stringify } from 'query-string';
 import { fetchUtils, HttpError } from 'react-admin';
 import { Observable } from 'rxjs';
-import { fetchEventSource } from '@microsoft/fetch-event-source';
 import type { Identifier } from 'react-admin';
 // import simpleRestProvider from 'ra-data-simple-rest';
 import jsonServerProvider from "ra-data-json-server";
 
-import { FatalError, RetriableError } from './customError';
 import { CrawlerItem, PushItem, ClearPushResDto } from '../interfaces';
+import { postSse } from './fetchsse';
+import { customHeadersInEnv } from './customHeaderInEnv';
 
 export const httpClient = async (url: string, options: fetchUtils.Options = {}) => {
     const token = localStorage.getItem(`${import.meta.env.VITE_APP_COOKIE_PREFIX}token`);
 
     const customHeaders = (options.headers ||
         new Headers({
+            ...customHeadersInEnv,
             Accept: 'application/json',
-            ['Access-Control-Allow-Origin']: '*',
         })) as Headers;
     
     let user: any
@@ -37,11 +37,11 @@ export const baseDataProvider = jsonServerProvider(import.meta.env.VITE_SERVER_H
 
 function buildEndPoint(endPoint: string) {
     let endUrlPoint = `${import.meta.env.VITE_SERVER_HOST}/${endPoint}`;
-    if (!endUrlPoint.startsWith('http')) {
+    // if (!endUrlPoint.startsWith('http')) {
         // 获取当前的协议
-        const currentProtocol = window.location.protocol;
-        endUrlPoint = `${currentProtocol}${endUrlPoint}`;
-    }
+    //     const currentProtocol = window.location.protocol;
+    //     endUrlPoint = `${currentProtocol}${endUrlPoint}`;
+    // }
     return endUrlPoint;
 }
 
@@ -88,93 +88,23 @@ export const dataProvider = {
     },
     getDiskFiles: async (kbId: Identifier, subDir?: string) => {
 
-        const endUrlPoint = buildEndPoint(`kbs/${kbId}/diskFiles`);
         const queryParams = {
             subDir: subDir || '',
             isRecursion: 'true'
         };
-        const url = new URL(endUrlPoint);
-        const params = new URLSearchParams(queryParams);
-        url.search = params.toString();
-        // 最后的url
-        const finalUrl = url.toString();
-        const { json: files } = await httpClient(finalUrl, {
+        const endUrlPoint = buildEndPoint(`kbs/${kbId}/diskFiles`);
+
+        const url = `${endUrlPoint}?${stringify(queryParams)}`;
+        const { json: files } = await httpClient(url, {
             method: 'GET',
         });
 
         return files;
     },
-    startCrawler: (kbId: Identifier, siteId: Identifier, data: any): Observable<CrawlerItem> => {
+    startCrawler: async (kbId: Identifier, siteId: Identifier, data: any, ctrl: AbortController): Promise<Observable<CrawlerItem>> => {
         const endUrlPoint = buildEndPoint(`kbs/${kbId}/site/${siteId}/crawler`);
         const token = localStorage.getItem(`${import.meta.env.VITE_APP_COOKIE_PREFIX}token`);
-
-        const ctrl = new AbortController();
-
-        const observable = new Observable<CrawlerItem>(subscriber => {
-            
-            fetchEventSource(endUrlPoint, {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    ['Content-Type']: 'application/json',
-                    ['Access-Control-Allow-Origin']: '*',
-                    token: `Bearer ${token}`
-                },
-                body: JSON.stringify(data),
-                signal: ctrl.signal,
-                async onopen(response) {
-                    if (response.ok) {
-                        return; // everything's good
-                    } else if (response.status >= 400 && response.status < 500 && response.status !== 429) {
-                        // client-side errors are usually non-retriable:
-                        throw new Error('Client error');
-                    } else {
-                        // ctrl.abort();
-                        throw new RetriableError();
-                    }
-                },
-                onmessage(msg) {
-                    // if the server emits an error message, throw an exception
-                    // so it gets handled by the onerror callback below:
-                    if (msg.event === 'FatalError') {
-                        throw new FatalError(msg.data);
-                    }
-                    if (!msg.data) {
-                        return;
-                    }
-
-                    try {
-                        const jsonData = JSON.parse(msg.data) as CrawlerItem;
-                        subscriber.next(jsonData);
-                        
-                        if (jsonData.finish) {
-                            subscriber.complete();
-                            ctrl.abort();
-                        }
-                    } catch (error) {
-                        throw new FatalError('json parsing error');
-                    }
-
-                },
-                onclose() {
-                    // ctrl.abort();
-                    // if the server closes the connection unexpectedly, retry:
-                    throw new RetriableError();
-                },
-                onerror(err) {
-                    if (err instanceof FatalError) {
-                        // ctrl.abort();
-                        throw err; // rethrow to stop the operation
-                    } else {
-                        // do nothing to automatically retry. You can also
-                        // return a specific retry interval here.
-                    }
-                }
-            });
-
-        });
-
-        return observable;
+        return postSse(endUrlPoint, token, data, ctrl);
     },
     kbUpload: async (kbId: Identifier, body: any) => {
         const endUrlPoint = buildEndPoint(`kbs/${kbId}/upload`);
@@ -212,83 +142,11 @@ export const dataProvider = {
         return result;
     },
 
-    runPush: (pushConfigId: Identifier, pushVersion: string): Observable<PushItem> => {
+    runPush: async (pushConfigId: Identifier, pushVersion: string, ctrl: AbortController): Promise<Observable<PushItem>> => {
         const endUrlPoint = buildEndPoint(`push/${pushConfigId}/run`);
         const token = localStorage.getItem(`${import.meta.env.VITE_APP_COOKIE_PREFIX}token`);
 
-        const ctrl = new AbortController();
-
-        const observable = new Observable<PushItem>(subscriber => {
-
-            fetchEventSource(endUrlPoint, {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    ['Content-Type']: 'application/json',
-                    ['Access-Control-Allow-Origin']: '*',
-                    token: `Bearer ${token}`
-                },
-                body: JSON.stringify({ pushVersion }),
-                signal: ctrl.signal,
-                async onopen(response) {
-                    if (response.ok) {
-                        return; // everything's good
-                    } else if (response.status >= 400 && response.status < 500 && response.status !== 429) {
-                        // client-side errors are usually non-retriable:
-                        throw new Error('Client error');
-                    } else {
-                        ctrl.abort();
-                        throw new RetriableError();
-                    }
-                },
-                onmessage(msg) {
-                    // if the server emits an error message, throw an exception
-                    // so it gets handled by the onerror callback below:
-                    if (msg.event === 'FatalError') {
-                        throw new FatalError(msg.data);
-                    }
-                    if (!msg.data) {
-                        return;
-                    }
-
-                    try {
-                        const jsonData = JSON.parse(msg.data) as PushItem;
-                        subscriber.next(jsonData);
-
-                        if (jsonData.finish) {
-                            subscriber.complete();
-                            subscriber.unsubscribe();
-                            ctrl.abort();
-                        }
-                    } catch (error) {
-                        subscriber.unsubscribe()
-                        ctrl.abort();
-                        throw new FatalError('json parsing error');
-                    }
-
-                },
-                onclose() {
-                    ctrl.abort();
-                    throw new RetriableError();
-                },
-                onerror(err) {
-
-                    console.log('onerror', err);
-                     ctrl.abort();
-
-                    if (err instanceof FatalError) {
-                        // ctrl.abort();
-                        throw err; 
-                    } else {
-                        // do nothing to automatically retry. You can also
-                        // return a specific retry interval here.
-                    }
-                }
-            });
-
-        });
-
-        return observable;
+        return postSse<PushItem>(endUrlPoint, token, { pushVersion }, ctrl);
     },
     runSiglePush: async (pushConfigId: Identifier, fileId: Identifier) => {
         const endUrlPoint = buildEndPoint(`push/${pushConfigId}/run/${fileId}`);

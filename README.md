@@ -44,6 +44,6 @@ Comments have the following properties: `id`, `post_id` and `content`.
 ## todo
 
 - i18n
-- choices
+- 断线,自动关闭 sse
 - 
 
