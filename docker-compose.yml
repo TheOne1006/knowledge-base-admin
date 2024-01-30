@@ -1,0 +1,10 @@
+version: '3.1'
+services:
+  kb-admin:
+      build: './'
+      volumes:
+        - "./dist:/usr/src/app/dist_tmp/:rw"
+      # command: "cp -R dist/* dist_tmp/*"
+      command: ["sh", "-c", "cp -R dist/* dist_tmp"]
+      
+

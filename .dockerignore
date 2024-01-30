@@ -1,0 +1,10 @@
+node_modules
+.vscode
+.nyc_output
+coverage
+log
+.git
+Dockerfile
+docker-compose.yml
+.github
+dist
