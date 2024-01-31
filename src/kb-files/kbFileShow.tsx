@@ -26,6 +26,7 @@ const KbFileShow = () => {
                         <TextField source="fileExt" />
                         <TextField source="sourceType" />
                         <UrlField source="sourceUrl" />
+                        <TextField source="checksum" />
                         <ReferenceField source="kbId" reference="kbs" link="show" >
                             <TextField source="title" />
                         </ReferenceField>

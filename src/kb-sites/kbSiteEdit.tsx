@@ -9,7 +9,7 @@ import {
     ReferenceField,
     TextField,
     DateTimeInput,
-    SelectArrayInput,
+    SelectInput,
 } from "react-admin";
 
 import { TypescriptEditInput } from '../components/inputs';
@@ -49,8 +49,8 @@ const KbSiteEdit = (props: any) => (
                     <TextInput source="" variant="outlined" />
                 </SimpleFormIterator>
             </ArrayInput>
-            <SelectArrayInput source='engineType' choices={CRAWLER_ENGINE_TYPE_CHOICES} />
-            <SelectArrayInput source='fileSuffix' choices={FILE_EXT_CHOICES} />
+            <SelectInput source='engineType' choices={CRAWLER_ENGINE_TYPE_CHOICES} />
+            <SelectInput source='fileSuffix' choices={FILE_EXT_CHOICES} />
             <TypescriptEditInput source="evaluate" />
             <DateTimeInput disabled source="createdAt" />
             <DateTimeInput disabled source="updatedAt" />

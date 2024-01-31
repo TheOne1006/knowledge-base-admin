@@ -29,6 +29,7 @@ const PushMapShow = () => {
                         <PushTypeField source="type" cellClassName="type" />
                         <TextField source="pushVersion" />
                         <TextField source="remoteId" />
+                        <TextField source="pushChecksum" />
                         <ReferenceField source="kbId" reference="kbs" link="show" >
                             <TextField source="title" />
                         </ReferenceField>

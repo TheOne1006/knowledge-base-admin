@@ -22,6 +22,7 @@ import {
     Collapse,
     ButtonGroup,
 } from '@mui/material';
+import DoneOutlineRoundedIcon from '@mui/icons-material/DoneOutlineRounded';
 
 import { PushTypeField, JSONEditField } from '../components/fields';
 import { PreviewBtn } from '../components/PreviewBtn';
@@ -131,7 +132,7 @@ const PushConfigShow = () => {
                             debounce={1000}
                             reference="kb-files"
                             target="kbId"
-                            source="id"
+                            source="kbId"
                             label=""
                             sort={{ field: 'id', order: 'DESC' }}
                             pagination={<Pagination />}
@@ -151,10 +152,32 @@ const PushConfigShow = () => {
                                                     configId: controllerProps.record.id,
                                                 }}
                                             >
-                                                <TextField source="pushVersion" />
+                                                <TextField source="pushVersion" />    
                                             </ReferenceOneField>
                                         ): null
                                     }
+
+                                {
+                                    controllerProps?.record?.id ? (
+                                        <ReferenceOneField
+                                            label="map.cheksum"
+                                            source="checksum"
+                                            reference="push-maps"
+                                            target="pushChecksum"
+                                            filter={{
+                                                configId: controllerProps.record.id,
+                                            }}
+                                        >
+                                            <WrapperField>
+                                                {/* <TextField source="pushChecksum" /> */}
+                                                <DoneOutlineRoundedIcon color="success" />
+                                            </WrapperField>
+
+                                        </ReferenceOneField>
+                                    ) : null
+                                }
+
+
                                 <DateField source="createdAt" cellClassName="createdAt" showTime />
                                  <WrapperField label="op">
                                     {

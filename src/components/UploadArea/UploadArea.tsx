@@ -26,7 +26,7 @@ export const UploadArea = () => {
                 label="UploadArea"
                 multiple
                 // pdf html json excel csv txt
-                accept="application/pdf, text/html, application/json, application/vnd.ms-excel, text/csv, text/plain, text/markdown"
+                accept={['application/pdf', 'text/html', 'application/json', 'application/vnd.ms-excel', 'text/csv', 'text/plain', 'text/markdown', '.md']}
             >
                 <FileField source="src" title="title" />
             </FileInput>

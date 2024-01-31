@@ -8,9 +8,7 @@ import {
     SimpleFormIterator,
     ReferenceInput,
     SelectInput,
-    SelectArrayInput,
 } from "react-admin";
-
 
 import { TypescriptEditInput } from '../components/inputs'
 import { CRAWLER_ENGINE_TYPE_CHOICES, FILE_EXT_CHOICES } from '../constants';
@@ -52,8 +50,8 @@ const KbSiteCreate = (props: any) => {
                         <TextInput source="" variant="outlined" />
                     </SimpleFormIterator>
                 </ArrayInput>
-                <SelectArrayInput source='engineType' choices={CRAWLER_ENGINE_TYPE_CHOICES} />
-                <SelectArrayInput source='fileSuffix' choices={FILE_EXT_CHOICES} />
+                <SelectInput source='engineType' choices={CRAWLER_ENGINE_TYPE_CHOICES} />
+                <SelectInput source='fileSuffix' choices={FILE_EXT_CHOICES} />
                 <TypescriptEditInput source="evaluate" />
             </SimpleForm>
         </Create>

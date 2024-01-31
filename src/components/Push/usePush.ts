@@ -25,9 +25,9 @@ export const usePush = () => {
         }
         const ctrl = new AbortController();
         globalCtrl = ctrl;
-        const { kbId, pushVersion } = pick(data, ['kbId', 'pushVersion']);
+        const { id, pushVersion } = pick(data, ['id', 'pushVersion']);
         // config.id 
-        const pushObser = await dataProvider.runPush(kbId, pushVersion, ctrl);
+        const pushObser = await dataProvider.runPush(id, pushVersion, ctrl);
 
         setOpen(true);
         setLoading(true);
@@ -71,11 +71,11 @@ export const usePush = () => {
 
 
     async function clearAllPushMap(data: any) {
-        const { kbId, pushVersion } = pick(data, ['kbId', 'pushVersion']);
+        const { id, pushVersion } = pick(data, ['id', 'pushVersion']);
         setLoading(true);
 
         try {
-            await dataProvider.clearAllPushMap(kbId, pushVersion);
+            await dataProvider.clearAllPushMap(id, pushVersion);
 
             notify('claer all', {
                 type: 'success'
